@@ -50,14 +50,14 @@ function wp_toolbar_experiments_add_menus() {
 }
 
 /**
-* Adds the "Customize" link to the Toolbar.
-*
-* Core makes the critical mistake of returning if is_admin() in the function instead of in WP_Admin_Bar::add_menus(), so we have to overwrite the entire function.
-*
-* @since 4.4.0
-*
-* @param WP_Admin_Bar $wp_admin_bar WP_Admin_Bar instance.
-*/
+ * Adds the "Customize" link to the Toolbar.
+ *
+ * Core makes the critical mistake of returning if is_admin() in the function instead of in WP_Admin_Bar::add_menus(), so we have to overwrite the entire function.
+ *
+ * @since 4.4.0
+ *
+ * @param WP_Admin_Bar $wp_admin_bar WP_Admin_Bar instance.
+ */
 function wp_toolbar_experiments_customize_menu( $wp_admin_bar ) {
 	// Don't show for users who can't access the customizer.
 	if ( ! current_user_can( 'customize' ) ) {
