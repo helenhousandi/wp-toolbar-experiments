@@ -49,18 +49,15 @@ function wp_toolbar_experiments_add_menus() {
 	add_action( 'admin_bar_menu', 'wp_toolbar_experiments_customize_menu', 40 );
 }
 
-// @todo add About to admin menu under dashboard
-// @todo remove Customizer Header & Background from admin menu.
-
 /**
-* Adds the "Customize" link to the Toolbar.
-*
-* Core makes the critical mistake of returning if is_admin() in the function instead of in WP_Admin_Bar::add_menus(), so we have to overwrite the entire function.
-*
-* @since 4.4.0
-*
-* @param WP_Admin_Bar $wp_admin_bar WP_Admin_Bar instance.
-*/
+ * Adds the "Customize" link to the Toolbar.
+ *
+ * Core makes the critical mistake of returning if is_admin() in the function instead of in WP_Admin_Bar::add_menus(), so we have to overwrite the entire function.
+ *
+ * @since 4.4.0
+ *
+ * @param WP_Admin_Bar $wp_admin_bar WP_Admin_Bar instance.
+ */
 function wp_toolbar_experiments_customize_menu( $wp_admin_bar ) {
 	// Don't show for users who can't access the customizer.
 	if ( ! current_user_can( 'customize' ) ) {
@@ -299,4 +296,34 @@ function wp_toolbar_experiments_ab_admin_menu( $wp_admin_bar ) {
 	}
 }
 
+/**
+ * Add and remove various submenu items in the admin menu.
+ */
+function wp_toolbar_experiments_menus() {
+	// Dashboard > About WordPress
+	add_dashboard_page( __( 'About WordPress' ), __( 'About WordPress' ), '', 'about.php' );
 
+	// Appearance > Customize | Header | Background
+	// Gross that we have to do it this way. See L#143 in wp-admin/menu.php.
+	global $submenu;
+
+	// Remove Customize.
+	unset( $submenu['themes.php'][6] );
+
+	// Remove Header.
+	unset( $submenu['themes.php'][15] );
+
+	// Remove Background
+	unset( $submenu['themes.php'][20] );
+}
+add_action( 'admin_menu', 'wp_toolbar_experiments_menus' );
+
+/**
+ * Override the parent file for credits and freedoms as Dashboard.
+ */
+function wp_toolbar_experiments_about_parent_file() {
+	global $parent_file;
+	$parent_file = 'index.php';
+}
+add_action( 'admin_head-credits.php', 'wp_toolbar_experiments_about_parent_file' );
+add_action( 'admin_head-freedoms.php', 'wp_toolbar_experiments_about_parent_file' );
